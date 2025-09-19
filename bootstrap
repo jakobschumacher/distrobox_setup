@@ -109,7 +109,20 @@ cd "$FOLDER_NAME"
 
 # Download distrobox config
 echo -e "${YELLOW}📥 Downloading $PROJECT_TYPE configuration...${NC}"
-curl -s "$GITHUB_BASE/$CONFIG_FILE" > "$CONFIG_FILE"
+echo "DEBUG: Downloading from: $GITHUB_BASE/$CONFIG_FILE"
+if ! curl -s "$GITHUB_BASE/$CONFIG_FILE" -o "$CONFIG_FILE"; then
+    echo -e "${RED}Error: Failed to download configuration file${NC}"
+    echo "URL: $GITHUB_BASE/$CONFIG_FILE"
+    exit 1
+fi
+
+# Check if download was successful
+if [ ! -s "$CONFIG_FILE" ] || grep -q "404" "$CONFIG_FILE"; then
+    echo -e "${RED}Error: Downloaded file is empty or contains 404 error${NC}"
+    echo "Content of downloaded file:"
+    cat "$CONFIG_FILE"
+    exit 1
+fi
 
 # Modify container name in config
 sed "s/^\[.*\]/[$CONTAINER_NAME]/" "$CONFIG_FILE" > ".distrobox.ini"
