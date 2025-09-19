@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Distrobox Development Environment Bootstrap
-# Usage: curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash
+# Usage: curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
 
 set -e
 
@@ -18,11 +18,6 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🚀 Distrobox Development Environment Setup${NC}"
 echo
 
-# Check if stdin is available (not piped)
-if [ ! -t 0 ]; then
-    # If piped, we need to redirect input
-    exec 0< /dev/tty
-fi
 
 # Check if we're in an existing project
 if [ -f ".distrobox.ini" ]; then
@@ -141,7 +136,7 @@ distrobox-enter $CONTAINER_NAME
 
 ## Rebuild Environment
 \`\`\`bash
-curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash
+curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
 \`\`\`
 
 ## Project Info
@@ -173,7 +168,7 @@ if ! grep -q "alias newproject=" ~/.bashrc 2>/dev/null; then
     if [[ $add_aliases =~ ^[Yy]$ ]]; then
         echo "" >> ~/.bashrc
         echo "# Distrobox project aliases" >> ~/.bashrc
-        echo "alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash'" >> ~/.bashrc
+        echo "alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap'" >> ~/.bashrc
         echo "alias resume='[ -f .distrobox.ini ] && distrobox-enter \$(grep \"^\\[\" .distrobox.ini | tr -d \"[]\") || echo \"No distrobox project found in this directory\"'" >> ~/.bashrc
         
         echo -e "${GREEN}✅ Aliases added to ~/.bashrc${NC}"

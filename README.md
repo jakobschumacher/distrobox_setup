@@ -35,13 +35,13 @@ Statistical computing and data science environment with:
 
 **Bootstrap from anywhere:**
 ```bash
-curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash
+curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
 ```
 
 **One-time alias setup** (optional but recommended):
 ```bash
 # Bootstrap script will offer to add these automatically
-alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash'
+alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap'
 alias resume='[ -f .distrobox.ini ] && distrobox-enter $(grep "^\[" .distrobox.ini | tr -d "[]") || echo "No distrobox project found"'
 ```
 
