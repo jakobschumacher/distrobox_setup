@@ -31,7 +31,7 @@ if [ -f ".distrobox.ini" ]; then
     echo "2) Rebuild container with latest config"
     echo "3) Cancel"
     echo
-    read -p "Choose (1-3): " choice
+    read -p "Choose (1-3): " choice < /dev/tty
     
     case $choice in
         1)
@@ -64,7 +64,7 @@ echo "2) JavaScript/Node.js"
 echo "3) R (data science)"
 echo
 
-read -p "Choose project type (1-3): " type_choice
+read -p "Choose project type (1-3): " type_choice < /dev/tty
 
 case $type_choice in
     1)
@@ -85,7 +85,7 @@ case $type_choice in
         ;;
 esac
 
-read -p "Project name: " project_name
+read -p "Project name: " project_name < /dev/tty
 
 if [ -z "$project_name" ]; then
     echo -e "${RED}Project name cannot be empty${NC}"
@@ -162,7 +162,7 @@ if ! grep -q "alias newproject=" ~/.bashrc 2>/dev/null; then
     echo "  - newproject (runs this bootstrap)"
     echo "  - resume (enters project container from project folder)"
     echo
-    read -p "Add aliases? (y/N): " add_aliases
+    read -p "Add aliases? (y/N): " add_aliases < /dev/tty
     
     if [[ $add_aliases =~ ^[Yy]$ ]]; then
         echo "" >> ~/.bashrc
