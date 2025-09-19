@@ -59,15 +59,15 @@ resume
 
 ```bash
 # Tauri development
-distrobox-create --file tauridev_distrobox.ini
+distrobox-assemble create --file tauridev_distrobox.ini
 distrobox-enter tauri-dev
 
 # JavaScript development  
-distrobox-create --file jsdev_distrobox.ini
+distrobox-assemble create --file jsdev_distrobox.ini
 distrobox-enter js-dev
 
 # R development
-distrobox-create --file rdev_distrobox.ini
+distrobox-assemble create --file rdev_distrobox.ini
 distrobox-enter r-dev
 ```
 

@@ -148,9 +148,9 @@ EOF
 git add README.md .distrobox.ini
 git commit -q -m "Initial commit"
 
-# Create distrobox
+# Create distrobox using assemble
 echo -e "${YELLOW}🐳 Creating distrobox container...${NC}"
-distrobox-create --file .distrobox.ini
+distrobox-assemble create --file .distrobox.ini
 
 echo
 echo -e "${GREEN}✅ Project $FOLDER_NAME created successfully!${NC}"
