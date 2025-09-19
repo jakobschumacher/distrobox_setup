@@ -38,11 +38,16 @@ Statistical computing and data science environment with:
 curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap
 ```
 
-**One-time alias setup** (optional but recommended):
+**One-time alias setup** (recommended):
 ```bash
-# Bootstrap script will offer to add these automatically
-alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap'
-alias resume='[ -f .distrobox.ini ] && distrobox-enter $(grep "^\[" .distrobox.ini | tr -d "[]") || echo "No distrobox project found"'
+# Add to ~/.bashrc
+echo "" >> ~/.bashrc
+echo "# Distrobox project aliases" >> ~/.bashrc
+echo "alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main/bootstrap -o /tmp/bootstrap && bash /tmp/bootstrap'" >> ~/.bashrc
+echo "alias resume='[ -f .distrobox.ini ] && distrobox-enter \$(grep \"^\\[\" .distrobox.ini | tr -d \"[]\") || echo \"No distrobox project found\"'" >> ~/.bashrc
+
+# Reload shell
+source ~/.bashrc
 ```
 
 **Daily workflow:**
