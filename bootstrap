@@ -5,7 +5,7 @@
 
 set -e
 
-GITHUB_BASE="https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main"
+GITHUB_BASE="https://raw.githubusercontent.com/jakobschumacher/distrobox_setup/main"
 DATE=$(date +%Y_%m_%d)
 
 # Colors for output
