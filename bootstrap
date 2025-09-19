@@ -18,8 +18,11 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🚀 Distrobox Development Environment Setup${NC}"
 echo
 
-# Fix for piped execution - redirect stdin to terminal
-exec < /dev/tty
+# Check if stdin is available (not piped)
+if [ ! -t 0 ]; then
+    # If piped, we need to redirect input
+    exec 0< /dev/tty
+fi
 
 # Check if we're in an existing project
 if [ -f ".distrobox.ini" ]; then
