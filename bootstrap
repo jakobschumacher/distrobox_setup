@@ -1,0 +1,182 @@
+#!/bin/bash
+
+# Distrobox Development Environment Bootstrap
+# Usage: curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash
+
+set -e
+
+GITHUB_BASE="https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main"
+DATE=$(date +%Y_%m_%d)
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}🚀 Distrobox Development Environment Setup${NC}"
+echo
+
+# Check if we're in an existing project
+if [ -f ".distrobox.ini" ]; then
+    CONTAINER_NAME=$(grep "^\[" .distrobox.ini | tr -d "[]")
+    PROJECT_DIR=$(basename "$PWD")
+    
+    echo -e "${YELLOW}📁 Existing project detected: $PROJECT_DIR${NC}"
+    echo -e "${YELLOW}📦 Container: $CONTAINER_NAME${NC}"
+    echo
+    echo "What would you like to do?"
+    echo "1) Enter existing container"
+    echo "2) Rebuild container with latest config"
+    echo "3) Cancel"
+    echo
+    read -p "Choose (1-3): " choice
+    
+    case $choice in
+        1)
+            echo -e "${GREEN}🔄 Entering container: $CONTAINER_NAME${NC}"
+            distrobox-enter "$CONTAINER_NAME"
+            exit 0
+            ;;
+        2)
+            echo -e "${YELLOW}🔄 Rebuilding container...${NC}"
+            distrobox-rm -f "$CONTAINER_NAME" 2>/dev/null || true
+            distrobox-create --file .distrobox.ini
+            echo -e "${GREEN}✅ Container rebuilt! Use 'resume' to enter.${NC}"
+            exit 0
+            ;;
+        3)
+            echo "Cancelled."
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}Invalid choice${NC}"
+            exit 1
+            ;;
+    esac
+fi
+
+# New project setup
+echo "Available project types:"
+echo "1) Tauri (Rust + frontend)"
+echo "2) JavaScript/Node.js"
+echo "3) R (data science)"
+echo
+
+read -p "Choose project type (1-3): " type_choice
+
+case $type_choice in
+    1)
+        PROJECT_TYPE="tauri"
+        CONFIG_FILE="tauridev_distrobox.ini"
+        ;;
+    2)
+        PROJECT_TYPE="js"
+        CONFIG_FILE="jsdev_distrobox.ini"
+        ;;
+    3)
+        PROJECT_TYPE="r"
+        CONFIG_FILE="rdev_distrobox.ini"
+        ;;
+    *)
+        echo -e "${RED}Invalid choice${NC}"
+        exit 1
+        ;;
+esac
+
+read -p "Project name: " project_name
+
+if [ -z "$project_name" ]; then
+    echo -e "${RED}Project name cannot be empty${NC}"
+    exit 1
+fi
+
+FOLDER_NAME="${DATE}_${project_name}"
+CONTAINER_NAME="${PROJECT_TYPE}-${project_name}"
+
+echo
+echo -e "${BLUE}📝 Creating project:${NC}"
+echo -e "  📁 Folder: $FOLDER_NAME"
+echo -e "  🐳 Container: $CONTAINER_NAME"
+echo -e "  ⚙️  Type: $PROJECT_TYPE"
+echo
+
+# Create project directory
+mkdir -p "$FOLDER_NAME"
+cd "$FOLDER_NAME"
+
+# Download distrobox config
+echo -e "${YELLOW}📥 Downloading $PROJECT_TYPE configuration...${NC}"
+curl -s "$GITHUB_BASE/$CONFIG_FILE" > "$CONFIG_FILE"
+
+# Modify container name in config
+sed "s/^\[.*\]/[$CONTAINER_NAME]/" "$CONFIG_FILE" > ".distrobox.ini"
+rm "$CONFIG_FILE"
+
+# Initialize git
+echo -e "${YELLOW}🔧 Initializing git repository...${NC}"
+git init -q
+echo "# $project_name" > README.md
+
+# Create project README
+cat >> README.md << EOF
+
+## Quick Start
+
+\`\`\`bash
+resume
+\`\`\`
+
+Or manually:
+\`\`\`bash
+distrobox-enter $CONTAINER_NAME
+\`\`\`
+
+## Rebuild Environment
+\`\`\`bash
+curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash
+\`\`\`
+
+## Project Info
+- **Type**: $PROJECT_TYPE
+- **Container**: $CONTAINER_NAME
+- **Created**: $DATE
+EOF
+
+git add README.md .distrobox.ini
+git commit -q -m "Initial commit"
+
+# Create distrobox
+echo -e "${YELLOW}🐳 Creating distrobox container...${NC}"
+distrobox-create --file .distrobox.ini
+
+echo
+echo -e "${GREEN}✅ Project $FOLDER_NAME created successfully!${NC}"
+echo
+
+# Check for aliases
+if ! grep -q "alias newproject=" ~/.bashrc 2>/dev/null; then
+    echo -e "${YELLOW}💡 Would you like to add helpful aliases to ~/.bashrc?${NC}"
+    echo "This will add:"
+    echo "  - newproject (runs this bootstrap)"
+    echo "  - resume (enters project container from project folder)"
+    echo
+    read -p "Add aliases? (y/N): " add_aliases
+    
+    if [[ $add_aliases =~ ^[Yy]$ ]]; then
+        echo "" >> ~/.bashrc
+        echo "# Distrobox project aliases" >> ~/.bashrc
+        echo "alias newproject='curl -s https://raw.githubusercontent.com/jakobschumacher/distrobox-setups/main/bootstrap | bash'" >> ~/.bashrc
+        echo "alias resume='[ -f .distrobox.ini ] && distrobox-enter \$(grep \"^\\[\" .distrobox.ini | tr -d \"[]\") || echo \"No distrobox project found in this directory\"'" >> ~/.bashrc
+        
+        echo -e "${GREEN}✅ Aliases added to ~/.bashrc${NC}"
+        echo -e "${YELLOW}💡 Run 'source ~/.bashrc' or restart your terminal to use them${NC}"
+    fi
+fi
+
+echo
+echo -e "${BLUE}🎯 Next steps:${NC}"
+echo -e "  1. ${GREEN}distrobox-enter $CONTAINER_NAME${NC} (or just ${GREEN}resume${NC} if you added aliases)"
+echo -e "  2. Start coding! 🚀"
+echo
