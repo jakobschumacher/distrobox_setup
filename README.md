@@ -26,10 +26,17 @@ Modern JavaScript/Node.js development environment with:
 ### R Development (`rdev_distrobox.ini`)
 Statistical computing and data science environment with:
 - R base and development packages
-- Tidyverse, Shiny, R Markdown
-- Data science libraries (caret, ggplot2, plotly)
+- Essential R packages for data analysis
 - LaTeX support for document generation
-- Python integration via reticulate
+- Development tools and utilities
+
+### Vala Development (`valadev_distrobox.ini`)
+Modern Vala development environment with:
+- Vala compiler and development tools
+- GTK 3/4 and Libadwaita for UI development
+- GLib ecosystem libraries (GObject, GIO, GStreamer)
+- Build tools (Meson, Ninja, CMake)
+- Graphics libraries (Cairo, SVG support)
 
 ## Quick Project Setup
 
@@ -74,6 +81,10 @@ distrobox-enter js-dev
 # R development
 distrobox-assemble create --file rdev_distrobox.ini
 distrobox-enter r-dev
+
+# Vala development
+distrobox-assemble create --file valadev_distrobox.ini
+distrobox-enter vala-dev
 ```
 
 ## Notes

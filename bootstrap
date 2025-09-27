@@ -63,9 +63,10 @@ echo "Available project types:"
 echo "1) Tauri (Rust + frontend)"
 echo "2) JavaScript/Node.js"
 echo "3) R (data science)"
+echo "4) Vala (GTK applications)"
 echo
 
-read -p "Choose project type (1-3): " type_choice
+read -p "Choose project type (1-4): " type_choice
 
 case $type_choice in
     1)
@@ -79,6 +80,10 @@ case $type_choice in
     3)
         PROJECT_TYPE="r"
         CONFIG_FILE="rdev_distrobox.ini"
+        ;;
+    4)
+        PROJECT_TYPE="vala"
+        CONFIG_FILE="valadev_distrobox.ini"
         ;;
     *)
         echo -e "${RED}Invalid choice${NC}"
