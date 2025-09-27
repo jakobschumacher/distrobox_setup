@@ -98,19 +98,28 @@ if [ -z "$project_name" ]; then
     exit 1
 fi
 
+read -p "Project folder [~/Dokumente/03_Projekte]: " project_folder
+if [ -z "$project_folder" ]; then
+    project_folder="$HOME/Dokumente/03_Projekte"
+fi
+
+# Expand ~ to home directory
+project_folder="${project_folder/#\~/$HOME}"
+
 FOLDER_NAME="${DATE}_${project_name}"
-CONTAINER_NAME="${PROJECT_TYPE}-${project_name}"
+CONTAINER_NAME="${DATE}_${PROJECT_TYPE}_${project_name}"
+PROJECT_PATH="$project_folder/$FOLDER_NAME"
 
 echo
 echo -e "${BLUE}📝 Creating project:${NC}"
-echo -e "  📁 Folder: $FOLDER_NAME"
+echo -e "  📁 Path: $PROJECT_PATH"
 echo -e "  🐳 Container: $CONTAINER_NAME"
 echo -e "  ⚙️  Type: $PROJECT_TYPE"
 echo
 
 # Create project directory
-mkdir -p "$FOLDER_NAME"
-cd "$FOLDER_NAME"
+mkdir -p "$PROJECT_PATH"
+cd "$PROJECT_PATH"
 
 # Download distrobox config
 echo -e "${YELLOW}📥 Downloading $PROJECT_TYPE configuration...${NC}"
@@ -201,7 +210,9 @@ if ! grep -q "alias newproject=" ~/.bashrc 2>/dev/null; then
 fi
 
 echo
-echo -e "${BLUE}🎯 Next steps:${NC}"
-echo -e "  1. ${GREEN}distrobox-enter $CONTAINER_NAME${NC} (or just ${GREEN}resume${NC} if you added aliases)"
-echo -e "  2. Start coding! 🚀"
+echo -e "${BLUE}🎯 Entering development environment...${NC}"
+echo -e "${GREEN}🚀 Starting container: $CONTAINER_NAME${NC}"
 echo
+
+# Auto-enter the distrobox container
+exec distrobox-enter "$CONTAINER_NAME"
