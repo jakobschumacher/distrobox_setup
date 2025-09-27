@@ -31,12 +31,14 @@ Statistical computing and data science environment with:
 - Development tools and utilities
 
 ### Vala Development (`valadev_distrobox.ini`)
-Modern Vala development environment with:
-- Vala compiler and development tools
-- GTK 3/4 and Libadwaita for UI development
-- GLib ecosystem libraries (GObject, GIO, GStreamer)
+Modern Vala development environment with Ubuntu 25.04:
+- Vala compiler and documentation tools
+- GTK 3/4 and Libadwaita for modern UI development
+- Complete GLib ecosystem (GObject, GIO, GStreamer)
+- Folks libraries for contact management and social integration
+- Evolution Data Server integration (contacts, calendar, accounts)
+- Additional Vala libraries (Secret, Notify, Peas plugins)
 - Build tools (Meson, Ninja, CMake)
-- Graphics libraries (Cairo, SVG support)
 
 ## Quick Project Setup
 
