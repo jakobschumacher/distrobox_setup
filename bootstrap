@@ -168,7 +168,13 @@ git commit -q -m "Initial commit"
 
 # Create distrobox using assemble
 echo -e "${YELLOW}🐳 Creating distrobox container...${NC}"
-distrobox-assemble create --file .distrobox.ini
+echo "DEBUG: Running distrobox-assemble with verbose output..."
+echo "DEBUG: Contents of .distrobox.ini:"
+cat .distrobox.ini
+echo "DEBUG: Starting container creation..."
+set -x  # Enable bash debug output
+distrobox-assemble create --file .distrobox.ini --verbose
+set +x  # Disable bash debug output
 
 echo
 echo -e "${GREEN}✅ Project $FOLDER_NAME created successfully!${NC}"
